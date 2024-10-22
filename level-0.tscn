@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://bx04mv87nlhgo"]
+
+[ext_resource type="PackedScene" uid="uid://ucdftmqpwm04" path="res://ball.tscn" id="1_x0hvl"]
+
+[node name="Root" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(0.755764, 0, 0, 0, 0.755764, 0, 0, 0, 0.755764, -0.377882, 0, -4.30176)
+use_collision = true
+size = Vector3(10, 0.2, 17.3379)
+
+[node name="CSGSphere3D" parent="." instance=ExtResource("1_x0hvl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75286, 0)

@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://ucdftmqpwm04"]
+
+[node name="CSGSphere3D" type="CSGSphere3D"]
+use_collision = true
+radius = 0.2
