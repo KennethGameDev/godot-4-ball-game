@@ -1,29 +1,33 @@
-[gd_scene load_steps=4 format=3 uid="uid://b38utro8w3wet"]
+[gd_scene load_steps=7 format=3 uid="uid://b38utro8w3wet"]
 
 [ext_resource type="Script" uid="uid://ch84fhl2o8g3c" path="res://Scripts/Levels/level.gd" id="1_m65rr"]
 [ext_resource type="PackedScene" uid="uid://ucdftmqpwm04" path="res://Scenes/Objects/ball.tscn" id="2_6rnqo"]
+[ext_resource type="PackedScene" uid="uid://cukspp3mjfiun" path="res://Scenes/Objects/level_geometry.tscn" id="2_ed20m"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_xrw5n"]
-size = Vector3(20, 0.5, 20)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6rnqo"]
+
+[sub_resource type="Sky" id="Sky_ed20m"]
+sky_material = SubResource("ProceduralSkyMaterial_6rnqo")
+
+[sub_resource type="Environment" id="Environment_wmr1l"]
+background_mode = 2
+sky = SubResource("Sky_ed20m")
 
 [node name="StageTest" type="Node3D"]
 script = ExtResource("1_m65rr")
 
-[node name="Rotator" type="Node3D" parent="."]
+[node name="Environment" type="Node" parent="."]
 
-[node name="RigidBody3D" type="RigidBody3D" parent="Rotator"]
-axis_lock_linear_x = true
-axis_lock_linear_z = true
-center_of_mass_mode = 1
+[node name="Sky" type="Node" parent="Environment"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Rotator/RigidBody3D"]
-shape = SubResource("BoxShape3D_xrw5n")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment/Sky"]
+environment = SubResource("Environment_wmr1l")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.835395, 0.54965, 0, -0.54965, 0.835395, 4.76837e-07, 6.2435, 14.5088)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment/Sky"]
+transform = Transform3D(0.809735, -0.448431, -0.378471, 0, -0.644978, 0.764202, -0.586796, -0.6188, -0.522261, 0, 15.7183, 0)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.732721, 0.495295, -0.466693, 0, 0.68578, 0.727809, 0.680529, -0.533281, 0.502486, -14.8452, 14.7555, 14.6492)
+[node name="LevelGeometry" parent="Environment" instance=ExtResource("2_ed20m")]
+platform_types = Array[PackedScene]([])
 
-[node name="CSGSphere3D" parent="." instance=ExtResource("2_6rnqo")]
+[node name="Ball" parent="." instance=ExtResource("2_6rnqo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.46418, 0)

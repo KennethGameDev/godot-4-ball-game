@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bugyq48sm34wi"]
+
+[ext_resource type="Script" uid="uid://cyy2uehd5k14o" path="res://Scripts/Objects/level_platforms.gd" id="1_orxpv"]
+
+[node name="LevelPlatforms" type="Node3D"]
+script = ExtResource("1_orxpv")

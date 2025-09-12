@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bx04mv87nlhgo"]
 
-[ext_resource type="PackedScene" uid="uid://ucdftmqpwm04" path="res://ball.tscn" id="1_x0hvl"]
+[ext_resource type="PackedScene" uid="uid://ucdftmqpwm04" path="res://Scenes/Objects/ball.tscn" id="1_x0hvl"]
 
 [node name="Root" type="Node3D"]
 
