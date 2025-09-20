@@ -20,7 +20,6 @@ class Vector:
 		var end: Vector2 = camera.unproject_position(object.global_transform.origin + object.get(property) * scale_factor)
 		
 		node.draw_line(start, end, color, width)
-		node.draw_triangle(end, start.direction_to(end), width * 2, color)
 
 
 var vectors: Array = []
@@ -36,14 +35,6 @@ func _draw():
 	var camera: Camera3D = get_viewport().get_camera_3d()
 	for vector in vectors:
 		vector.draw(self, camera)
-
-
-func draw_triangle(pos: Vector2, dir: Vector2, tri_size: float, color: Color):
-	var a = pos + dir * tri_size
-	var b = pos + dir.rotated(2*PI/3) * tri_size
-	var c = pos + dir.rotated(4*PI/3) * tri_size
-	var points = PackedVector2Array([a, b, c])
-	draw_polygon(points, PackedColorArray([color]))
 
 
 func add_vector(object: Node3D, property: String, scale_factor: float, width: float, color: Color):

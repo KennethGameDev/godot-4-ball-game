@@ -6,7 +6,8 @@ extends RigidBody3D
 
 var input_direction: Vector3 = Vector3.ZERO
 var forward_direction: Vector3 = Vector3.ZERO
-@export var camera_speed: float = 0.05
+var angle_to_forward_dir: float = 0.0
+@export var camera_speed: float = 0.5
 @onready var camera_anchor: Marker3D = $CameraAnchor
 @onready var base_rotator: Node3D = $H_Rotation
 @onready var rigid_body = $"."
@@ -19,6 +20,7 @@ func _physics_process(_delta: float):
 func _process(delta: float):
 	camera_follow(delta)
 	DebugOverlay.draw.add_vector(self, "linear_velocity", 1, 4, Color(1, 1, 1, 0.75))
+	DebugOverlay.draw.add_vector(self, "forward_direction", 1, 4, Color(1, 1, 0, 0.75))
 
 
 func handle_directional_input():
@@ -38,6 +40,7 @@ func get_direction() -> bool:
 func move_ball():
 	if input_direction != Vector3.ZERO:
 		linear_velocity += Vector3(forward_direction.x, 0.0, forward_direction.z) * speed
+		angle_to_forward_dir = linear_velocity.signed_angle_to(forward_direction, Vector3.UP)
 
 
 func get_camera_yaw_angle_rad() -> float:
@@ -46,5 +49,7 @@ func get_camera_yaw_angle_rad() -> float:
 
 func camera_follow(delta: float):
 	base_rotator.global_position = camera_anchor.get_global_transform_interpolated().orthonormalized().origin
-	#if get_camera_yaw_angle_rad() !=
-	#base_rotator.rotate(Vector3.UP, camera_speed * delta)
+	
+	var theta: float = wrapf(atan2(angle_to_forward_dir, get_camera_yaw_angle_rad()), -PI, PI)
+	prints(angle_to_forward_dir, theta)
+	base_rotator.rotation.y += clamp(camera_speed * delta, 0, abs(theta)) * sign(theta)
