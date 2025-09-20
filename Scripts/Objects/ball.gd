@@ -2,33 +2,49 @@ class_name Ball
 extends RigidBody3D
 
 
-const SPEED = 5.0
+@export var speed = 0.2
 
-var input_direction: Vector2 = Vector2.ZERO
+var input_direction: Vector3 = Vector3.ZERO
+var forward_direction: Vector3 = Vector3.ZERO
+@export var camera_speed: float = 0.05
 @onready var camera_anchor: Marker3D = $CameraAnchor
 @onready var base_rotator: Node3D = $H_Rotation
+@onready var rigid_body = $"."
 
 
-func _physics_process(delta: float):
-	handle_directional_input(delta)
+func _physics_process(_delta: float):
+	handle_directional_input()
 
 
 func _process(delta: float):
-	base_rotator.global_position = camera_anchor.get_global_transform_interpolated().orthonormalized().origin
+	camera_follow(delta)
+	DebugOverlay.draw.add_vector(self, "linear_velocity", 1, 4, Color(1, 1, 1, 0.75))
 
 
-func handle_directional_input(delta: float):
+func handle_directional_input():
 	get_direction()
-	move_ball(delta)
+	move_ball()
 
 
-func get_direction() -> Vector2:
-	input_direction.x = Input.get_axis("move_left", "move_right")
-	input_direction.y = Input.get_axis("move_backward", "move_forward")
-	
-	return input_direction
+func get_direction() -> bool:
+	var input: Vector2 = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+	input_direction = Vector3(input.x, 0.0, input.y).normalized()
+	if input_direction != Vector3.ZERO:
+		forward_direction = input_direction.rotated(Vector3.UP, get_camera_yaw_angle_rad())
+		return true
+	else: return false
 
 
-func move_ball(delta: float):	
-	if input_direction != Vector2.ZERO:
-		add_constant_force(Vector3(input_direction.x * delta, 0.0, input_direction.y * delta), Vector3(0.0, 0.5, 0.0))
+func move_ball():
+	if input_direction != Vector3.ZERO:
+		linear_velocity += Vector3(forward_direction.x, 0.0, forward_direction.z) * speed
+
+
+func get_camera_yaw_angle_rad() -> float:
+	return base_rotator.global_transform.basis.get_euler().y
+
+
+func camera_follow(delta: float):
+	base_rotator.global_position = camera_anchor.get_global_transform_interpolated().orthonormalized().origin
+	#if get_camera_yaw_angle_rad() !=
+	#base_rotator.rotate(Vector3.UP, camera_speed * delta)

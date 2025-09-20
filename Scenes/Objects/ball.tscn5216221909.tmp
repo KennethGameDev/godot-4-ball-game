@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://ucdftmqpwm04"]
+
+[ext_resource type="Script" uid="uid://01358r43fvr" path="res://Scripts/Objects/ball.gd" id="1_afn8n"]
+[ext_resource type="Texture2D" uid="uid://bwvr37sc852bq" path="res://icon.svg" id="2_w86wi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_41bqp"]
+albedo_texture = ExtResource("2_w86wi")
+
+[sub_resource type="SphereMesh" id="SphereMesh_475ll"]
+material = SubResource("StandardMaterial3D_41bqp")
+radial_segments = 32
+rings = 16
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_475ll"]
+
+[node name="RigidBody3D" type="RigidBody3D"]
+angular_damp = 2.0
+script = ExtResource("1_afn8n")
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+mesh = SubResource("SphereMesh_475ll")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_475ll")
+
+[node name="CameraAnchor" type="Marker3D" parent="."]
+
+[node name="H_Rotation" type="Node3D" parent="."]
+top_level = true
+
+[node name="V_Rotation" type="Node3D" parent="H_Rotation"]
+transform = Transform3D(1, 0, 0, 0, 0.904886, 0.425653, 0, -0.425653, 0.904886, 0, 0, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="H_Rotation/V_Rotation"]
+spring_length = 3.0
+
+[node name="Camera3D" type="Camera3D" parent="H_Rotation/V_Rotation/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)

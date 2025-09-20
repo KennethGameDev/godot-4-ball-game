@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://gde8r3hki0jg"]
+
+[ext_resource type="Script" uid="uid://dyb058xegqjbx" path="res://Scripts/Objects/debug_overlay.gd" id="1_1fyvf"]
+[ext_resource type="Script" uid="uid://dxw82nwyyarwj" path="res://Scripts/Objects/debug_draw.gd" id="2_hd6dr"]
+[ext_resource type="Script" uid="uid://7iemf4crjhsy" path="res://Scripts/Objects/debug_stats.gd" id="3_hd6dr"]
+
+[node name="DebugOverlay" type="CanvasLayer"]
+script = ExtResource("1_1fyvf")
+
+[node name="DebugDraw" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_hd6dr")
+
+[node name="DebugStats" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(70, 50)
+offset_right = 320.0
+offset_bottom = 260.0
+script = ExtResource("3_hd6dr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DebugStats"]
+layout_mode = 2
+theme_override_constants/separation = 6

@@ -1,17 +1,47 @@
-[gd_scene load_steps=7 format=3 uid="uid://b38utro8w3wet"]
+[gd_scene load_steps=11 format=3 uid="uid://b38utro8w3wet"]
 
 [ext_resource type="Script" uid="uid://ch84fhl2o8g3c" path="res://Scripts/Levels/level.gd" id="1_m65rr"]
 [ext_resource type="PackedScene" uid="uid://ucdftmqpwm04" path="res://Scenes/Objects/ball.tscn" id="2_6rnqo"]
-[ext_resource type="PackedScene" uid="uid://cukspp3mjfiun" path="res://Scenes/Objects/level_geometry.tscn" id="2_ed20m"]
+[ext_resource type="Texture2D" uid="uid://c422npbm5se4x" path="res://assets/kloofendal_48d_partly_cloudy_puresky_4k.exr" id="2_i05vo"]
+[ext_resource type="PackedScene" uid="uid://dxw7cledbpiia" path="res://addons/proto-csgs/proto_csg_box_3d.tscn" id="2_lol66"]
+[ext_resource type="Texture2D" uid="uid://b5qnlqcirdgvd" path="res://addons/proto-csgs/textures/green/texture_13.png" id="4_52ctx"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6rnqo"]
+[sub_resource type="Shader" id="Shader_52ctx"]
+code = "
+// NOTE: Shader automatically converted from Godot Engine 4.5.stable's PanoramaSkyMaterial.
+
+shader_type sky;
+
+uniform sampler2D source_panorama : filter_linear, source_color, hint_default_black;
+uniform float exposure : hint_range(0, 128) = 1.0;
+uniform float speed : hint_range(0, 0.03) = 0.002;
+
+void sky() {
+	vec2 skyCoords = vec2(SKY_COORDS.x + TIME * speed, SKY_COORDS.y);
+	
+	COLOR = texture(source_panorama, skyCoords).rgb * exposure;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u4vwj"]
+shader = SubResource("Shader_52ctx")
+shader_parameter/source_panorama = ExtResource("2_i05vo")
+shader_parameter/exposure = 1.0
+shader_parameter/speed = 0.002
 
 [sub_resource type="Sky" id="Sky_ed20m"]
-sky_material = SubResource("ProceduralSkyMaterial_6rnqo")
+sky_material = SubResource("ShaderMaterial_u4vwj")
+radiance_size = 5
 
 [sub_resource type="Environment" id="Environment_wmr1l"]
 background_mode = 2
 sky = SubResource("Sky_ed20m")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wmr1l"]
+resource_local_to_scene = true
+albedo_texture = ExtResource("4_52ctx")
+uv1_offset = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
 
 [node name="StageTest" type="Node3D"]
 script = ExtResource("1_m65rr")
@@ -26,8 +56,13 @@ environment = SubResource("Environment_wmr1l")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment/Sky"]
 transform = Transform3D(0.809735, -0.448431, -0.378471, 0, -0.644978, 0.764202, -0.586796, -0.6188, -0.522261, 0, 15.7183, 0)
 
-[node name="LevelGeometry" parent="Environment" instance=ExtResource("2_ed20m")]
-platform_types = Array[PackedScene]([])
+[node name="LevelGeometry" type="Node" parent="Environment"]
+
+[node name="ProtoCSGBox3D" parent="Environment/LevelGeometry" instance=ExtResource("2_lol66")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15.563477)
+size = Vector3(20, 0.5, 51.126953)
+material = SubResource("StandardMaterial3D_wmr1l")
+block_color = 1
 
 [node name="Ball" parent="." instance=ExtResource("2_6rnqo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.46418, 0)
